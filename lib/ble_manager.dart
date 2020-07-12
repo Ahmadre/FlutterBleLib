@@ -139,6 +139,9 @@ abstract class BleManager {
   ///
   /// If [serviceUUIDs] is empty, this will return an empty list.
   Future<List<Peripheral>> connectedPeripherals(List<String> serviceUUIDs);
+
+  /// Returns a list of paired [Peripheral]
+  Future<List<Peripheral>> pairedPeripherals();
 }
 
 /// State of the Bluetooth Adapter.

@@ -1,12 +1,7 @@
 part of _internal;
 
 class InternalBleManager
-    implements
-        BleManager,
-        ManagerForPeripheral,
-        ManagerForService,
-        ManagerForCharacteristic,
-        ManagerForDescriptor {
+    implements BleManager, ManagerForPeripheral, ManagerForService, ManagerForCharacteristic, ManagerForDescriptor {
   FlutterBleLib _bleLib;
 
   InternalBleManager() {
@@ -31,8 +26,7 @@ class InternalBleManager
   Future<void> destroyClient() => _bleLib.destroyClient();
 
   @override
-  Future<void> cancelTransaction(String transactionId) =>
-      _bleLib.cancelTransaction(transactionId);
+  Future<void> cancelTransaction(String transactionId) => _bleLib.cancelTransaction(transactionId);
 
   @override
   Future<void> enableRadio({String transactionId}) =>
@@ -46,8 +40,7 @@ class InternalBleManager
   Future<BluetoothState> bluetoothState() => _bleLib.state();
 
   @override
-  Stream<BluetoothState> observeBluetoothState(
-          {bool emitCurrentValue = true}) =>
+  Stream<BluetoothState> observeBluetoothState({bool emitCurrentValue = true}) =>
       _bleLib.observeBluetoothState(emitCurrentValue);
 
   @override
@@ -70,16 +63,12 @@ class InternalBleManager
     bool refreshGatt,
     Duration timeout,
   }) async =>
-      _bleLib.connectToPeripheral(
-          identifier, isAutoConnect, requestMtu, refreshGatt, timeout);
+      _bleLib.connectToPeripheral(identifier, isAutoConnect, requestMtu, refreshGatt, timeout);
 
   @override
   Stream<PeripheralConnectionState> observePeripheralConnectionState(
-      String peripheralIdentifier,
-      bool emitCurrentValue,
-      bool completeOnDisconnect) {
-    var streamTransformer = StreamTransformer<PeripheralConnectionState,
-            PeripheralConnectionState>.fromHandlers(
+      String peripheralIdentifier, bool emitCurrentValue, bool completeOnDisconnect) {
+    var streamTransformer = StreamTransformer<PeripheralConnectionState, PeripheralConnectionState>.fromHandlers(
         handleData: (PeripheralConnectionState data, EventSink sink) {
           sink.add(data);
           if (data == PeripheralConnectionState.disconnected) {
@@ -91,8 +80,7 @@ class InternalBleManager
         },
         handleDone: (EventSink sink) => sink.close());
 
-    var stream = _bleLib.observePeripheralConnectionState(
-        peripheralIdentifier, emitCurrentValue);
+    var stream = _bleLib.observePeripheralConnectionState(peripheralIdentifier, emitCurrentValue);
     if (completeOnDisconnect) {
       return stream.transform(streamTransformer);
     } else {
@@ -101,8 +89,7 @@ class InternalBleManager
   }
 
   @override
-  Future<void> disconnectOrCancelPeripheralConnection(
-          String peripheralIdentifier) =>
+  Future<void> disconnectOrCancelPeripheralConnection(String peripheralIdentifier) =>
       _bleLib.disconnectOrCancelPeripheralConnection(peripheralIdentifier);
 
   @override
@@ -127,8 +114,7 @@ class InternalBleManager
       _bleLib.characteristics(peripheral, serviceUuid);
 
   @override
-  Future<List<Service>> services(Peripheral peripheral) =>
-      _bleLib.services(peripheral);
+  Future<List<Service>> services(Peripheral peripheral) => _bleLib.services(peripheral);
 
   @override
   Future<List<Descriptor>> descriptorsForPeripheral(
@@ -136,8 +122,7 @@ class InternalBleManager
     String serviceUuid,
     String characteristicUuid,
   ) =>
-      _bleLib.descriptorsForPeripheral(
-          peripheral, serviceUuid, characteristicUuid);
+      _bleLib.descriptorsForPeripheral(peripheral, serviceUuid, characteristicUuid);
 
   @override
   Future<List<Descriptor>> descriptorsForService(
@@ -147,8 +132,7 @@ class InternalBleManager
       _bleLib.descriptorsForService(service, characteristicUuid);
 
   @override
-  Future<List<Descriptor>> descriptorsForCharacteristic(
-          Characteristic characteristic) =>
+  Future<List<Descriptor>> descriptorsForCharacteristic(Characteristic characteristic) =>
       _bleLib.descriptorsForCharacteristic(characteristic);
 
   @override
@@ -159,8 +143,7 @@ class InternalBleManager
       _bleLib.discoverAllServicesAndCharacteristics(peripheral, transactionId);
 
   @override
-  Future<List<Characteristic>> characteristicsForService(Service service) =>
-      _bleLib.characteristicsForService(service);
+  Future<List<Characteristic>> characteristicsForService(Service service) => _bleLib.characteristicsForService(service);
 
   @override
   Future<int> rssi(
@@ -172,14 +155,12 @@ class InternalBleManager
   }
 
   @override
-  Future<void> requestMtu(
-      Peripheral peripheral, int mtu, String transactionId) {
+  Future<void> requestMtu(Peripheral peripheral, int mtu, String transactionId) {
     return _bleLib.requestMtu(peripheral, mtu, transactionId);
   }
 
   @override
-  Future<List<Peripheral>> knownPeripherals(
-      List<String> peripheralIdentifiers) {
+  Future<List<Peripheral>> knownPeripherals(List<String> peripheralIdentifiers) {
     return _bleLib.knownDevices(peripheralIdentifiers ?? []);
   }
 
@@ -189,20 +170,21 @@ class InternalBleManager
   }
 
   @override
+  Future<List<Peripheral>> pairedPeripherals() {
+    return _bleLib.pairedDevices();
+  }
+
+  @override
   Future<Uint8List> readCharacteristicForIdentifier(
     Peripheral peripheral,
     InternalCharacteristic characteristic,
     String transactionId,
   ) =>
-      _bleLib.readCharacteristicForIdentifier(
-          peripheral, characteristic._id, transactionId);
+      _bleLib.readCharacteristicForIdentifier(peripheral, characteristic._id, transactionId);
 
   @override
   Future<CharacteristicWithValue> readCharacteristicForDevice(
-          Peripheral peripheral,
-          String serviceUuid,
-          String characteristicUuid,
-          String transactionId) =>
+          Peripheral peripheral, String serviceUuid, String characteristicUuid, String transactionId) =>
       _bleLib.readCharacteristicForDevice(
         peripheral,
         serviceUuid,
@@ -212,10 +194,7 @@ class InternalBleManager
 
   @override
   Future<CharacteristicWithValue> readCharacteristicForService(
-          Peripheral peripheral,
-          InternalService service,
-          String characteristicUuid,
-          String transactionId) =>
+          Peripheral peripheral, InternalService service, String characteristicUuid, String transactionId) =>
       _bleLib.readCharacteristicForService(
         peripheral,
         service._id,
@@ -224,12 +203,8 @@ class InternalBleManager
       );
 
   @override
-  Future<void> writeCharacteristicForIdentifier(
-          Peripheral peripheral,
-          InternalCharacteristic characteristic,
-          Uint8List value,
-          bool withResponse,
-          String transactionId) =>
+  Future<void> writeCharacteristicForIdentifier(Peripheral peripheral, InternalCharacteristic characteristic,
+          Uint8List value, bool withResponse, String transactionId) =>
       _bleLib.writeCharacteristicForIdentifier(
         peripheral,
         characteristic._id,
@@ -239,13 +214,8 @@ class InternalBleManager
       );
 
   @override
-  Future<Characteristic> writeCharacteristicForDevice(
-          Peripheral peripheral,
-          String serviceUuid,
-          String characteristicUuid,
-          Uint8List value,
-          bool withResponse,
-          String transactionId) =>
+  Future<Characteristic> writeCharacteristicForDevice(Peripheral peripheral, String serviceUuid,
+          String characteristicUuid, Uint8List value, bool withResponse, String transactionId) =>
       _bleLib.writeCharacteristicForDevice(
         peripheral,
         serviceUuid,
@@ -256,13 +226,8 @@ class InternalBleManager
       );
 
   @override
-  Future<Characteristic> writeCharacteristicForService(
-          Peripheral peripheral,
-          InternalService service,
-          String characteristicUuid,
-          Uint8List value,
-          bool withResponse,
-          String transactionId) =>
+  Future<Characteristic> writeCharacteristicForService(Peripheral peripheral, InternalService service,
+          String characteristicUuid, Uint8List value, bool withResponse, String transactionId) =>
       _bleLib.writeCharacteristicForService(
         peripheral,
         service._id,

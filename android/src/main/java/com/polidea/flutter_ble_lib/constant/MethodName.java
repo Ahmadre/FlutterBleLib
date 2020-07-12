@@ -36,6 +36,7 @@ public interface MethodName {
 
     String GET_CONNECTED_DEVICES = "getConnectedDevices";
     String GET_KNOWN_DEVICES = "getKnownDevices";
+    String GET_PAIRED_DEVICES = "getPairedDevices";
 
     String READ_CHARACTERISTIC_FOR_IDENTIFIER = "readCharacteristicForIdentifier";
     String READ_CHARACTERISTIC_FOR_DEVICE = "readCharacteristicForDevice";

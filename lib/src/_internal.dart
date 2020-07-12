@@ -13,6 +13,7 @@ import 'package:flutter_ble_lib/src/_containers.dart';
 import 'package:flutter_ble_lib/src/util/_transaction_id_generator.dart';
 import 'package:flutter_ble_lib/src/util/_transformers.dart';
 
+import '_constants.dart';
 import '_managers_for_classes.dart';
 
 part 'base_entities.dart';
